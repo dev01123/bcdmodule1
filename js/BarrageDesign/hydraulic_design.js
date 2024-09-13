@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const mainContent = document.getElementById('main');
 
+    // Load the Barrage Design form
     function loadBarrageDesign() {
         mainContent.innerHTML = `
             <div class="container">
@@ -95,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     }
 
+    // Update total width of barrage bays
     function updateTotalWidths() {
         const rows = document.querySelectorAll('#barrage-bays-table tbody tr');
         let totalWidth = 0;
@@ -110,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('total-width').textContent = totalWidth.toFixed(2);
     }
 
+    // Update total width of barrage piers
     function updatePierTotalWidths() {
         const rows = document.querySelectorAll('#barrage-piers-table tbody tr');
         let totalWidth = 0;
@@ -125,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('pier-total-width').textContent = totalWidth.toFixed(2);
     }
 
+    // Add a new barrage bay row
     function addBarrageBay() {
         const tableBody = document.querySelector('#barrage-bays-table tbody');
         const newRow = document.createElement('tr');
@@ -140,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateTotalWidths();
     }
 
+    // Add a new barrage pier row
     function addBarragePier() {
         const tableBody = document.querySelector('#barrage-piers-table tbody');
         const newRow = document.createElement('tr');
@@ -154,37 +159,38 @@ document.addEventListener('DOMContentLoaded', function() {
         updatePierTotalWidths();
     }
 
+    // Remove a row from the table
     function removeRow(button) {
         button.closest('tr').remove();
         updateTotalWidths();
         updatePierTotalWidths();
     }
 
+    // Execute the barrage design calculation
     function executeDesign() {
         const Q100 = parseFloat(document.getElementById('Q100').value);
         const Q500 = parseFloat(document.getElementById('Q500').value);
         const HFL100 = parseFloat(document.getElementById('HFL100').value);
         const HFL500 = parseFloat(document.getElementById('HFL500').value);
         const f = parseFloat(document.getElementById('f').value);
-        
-        // Check for empty input fields
+
         if (!Q100 || !Q500 || !HFL100 || !HFL500 || !f) {
-        alert('Please fill in all the required input fields.');
-        return;
+            alert('Please fill in all the required input fields.');
+            return;
         }
 
         let affluxValues = { Q100: 0.01, Q500: 0.01, Q100_10p: 0.01 };
         let affluxSatisfied = { Q100: false, Q500: false, Q100_10p: false };
         let finalOutputTables = { Q100: '', Q500: '', Q100_10p: '' };
-    
+
         const tables = ['Q100', 'Q500', 'Q100_10p'];
-    
+
         while (!affluxSatisfied.Q100 || !affluxSatisfied.Q500 || !affluxSatisfied.Q100_10p) {
             tables.forEach(type => {
                 if (!affluxSatisfied[type]) {
                     const currentQ = type === 'Q100' || type === 'Q100_10p' ? Q100 : Q500;
                     const currentHFL = type === 'Q100' || type === 'Q100_10p' ? HFL100 : HFL500;
-                    
+
                     let totalDischarge = 0;
                     let totalWaterway = parseFloat(document.getElementById('total-width').textContent) + parseFloat(document.getElementById('pier-total-width').textContent);
                     let q = currentQ / totalWaterway;
@@ -195,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         : 0.475 * Math.pow(currentQ / f, 1/3);
                     let va = q / R;
                     let ha = Math.pow(va, 2) / (2 * 9.81);
-    
+
                     let outputTable = `
                         <table class="table table-bordered">
                             <thead>
@@ -211,25 +217,24 @@ document.addEventListener('DOMContentLoaded', function() {
                             </thead>
                             <tbody>
                     `;
-    
+
                     document.querySelectorAll('#barrage-bays-table tbody tr').forEach(row => {
                         const bayType = row.querySelector('td:nth-child(1) input').value;
                         let number = parseFloat(row.querySelector('td:nth-child(2) input').value);
                         const width = parseFloat(row.querySelector('td:nth-child(3) input').value);
                         const crestLevel = parseFloat(row.querySelector('td:nth-child(4) input').value);
                         const HFL_afflux = currentHFL + affluxValues[type];
-    
-                        // Adjust the number of bays for the '10% Inoperative Condition'
+
                         if (type === 'Q100_10p') {
                             number = Math.floor(number * 0.9);
                         }
-    
+
                         const DR = (currentHFL - crestLevel) / (currentHFL + affluxValues[type] - crestLevel);
                         const Cd = -258.27 * Math.pow(DR, 6) + 959.58 * Math.pow(DR, 5) - 1459.3 * Math.pow(DR, 4) + 1158.9 * Math.pow(DR, 3) - 506.24 * Math.pow(DR, 2) + 115.27 * DR - 8.9388;
                         const discharge = Cd * (width * number) * (Math.pow(HFL_afflux + ha - crestLevel, 1.5) - Math.pow(ha, 1.5));
-    
+
                         totalDischarge += discharge;
-    
+
                         outputTable += `
                             <tr>
                                 <td>${bayType}</td>
@@ -242,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </tr>
                         `;
                     });
-    
+
                     outputTable += `
                         </tbody>
                         <tfoot>
@@ -253,17 +258,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tfoot>
                         </table>
                     `;
-    
+
                     if (totalDischarge >= currentQ) {
                         affluxSatisfied[type] = true;
                         finalOutputTables[type] = outputTable + `<p>Afflux satisfied at: ${affluxValues[type].toFixed(2)} m</p>`;
                     }
-    
-                    affluxValues[type] += 0.01;  // Increment afflux for next iteration
+
+                    affluxValues[type] += 0.01;
                 }
             });
         }
-    
+
         document.getElementById('output').innerHTML = `
             <h3>Output for Q100 and HFL100</h3>
             ${finalOutputTables.Q100}
@@ -271,10 +276,15 @@ document.addEventListener('DOMContentLoaded', function() {
             ${finalOutputTables.Q500}
             <h3>Output for Q100 and HFL100 (10% Inoperative Condition)</h3>
             ${finalOutputTables.Q100_10p}
+            <button type="button" class="btn btn-primary mt-4" id="print-pdf-btn">Print result in PDF</button>
         `;
+
+        // Add the PDF print functionality to the button
+        document.getElementById('print-pdf-btn').addEventListener('click', function() {
+            const element = document.getElementById('output');
+            html2pdf().from(element).save();
+        });
     }
-    
-    
 
     // Export functions to be accessible globally
     window.executeDesign = executeDesign;
@@ -284,5 +294,4 @@ document.addEventListener('DOMContentLoaded', function() {
     window.removeRow = removeRow;
     window.updateTotalWidths = updateTotalWidths;
     window.updatePierTotalWidths = updatePierTotalWidths;
-
 });
