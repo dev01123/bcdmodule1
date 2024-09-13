@@ -9,6 +9,65 @@
     <link rel="stylesheet" href="/assets/styles.css">
 
     <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #005f73, #0a9396);
+            position: fixed;
+            height: 100%;
+            padding: 20px;
+            color: white;
+        }
+
+        .sidebar .logo img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .sidebar p {
+            text-align: center;
+            font-size: 14px;
+            color: #ccd5ae;
+        }
+
+        .sidebar nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar nav ul li a {
+            text-decoration: none;
+            color: white;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .sidebar nav ul li a:hover {
+            background-color: #94d2bd;
+        }
+
         .dropdown-container {
             display: none;
             padding-left: 15px;
@@ -16,6 +75,90 @@
 
         .dropdown-btn.active + .dropdown-container {
             display: block;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-btn::after {
+            content: '\25BC';
+            float: right;
+            margin-left: 10px;
+            transition: transform 0.3s;
+        }
+
+        .dropdown-btn.active::after {
+            transform: rotate(-180deg);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content header {
+            background-color: #023e8a;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .menu-toggle {
+            font-size: 24px;
+            cursor: pointer;
+            display: none;
+        }
+
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+            }
+
+            .menu-toggle {
+                display: block;
+                position: absolute;
+                top: 15px;
+                left: 15px;
+                color: white;
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .menu-toggle.active + .sidebar {
+                display: block;
+                position: absolute;
+                z-index: 1;
+            }
+        }
+
+        /* Content Styling */
+        main {
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -72,6 +215,7 @@
     <div class="main-content">
         <header>
             <button class="menu-toggle">&#9776;</button>
+            <h1>Barrage & Canal Design</h1>
         </header>
 
         <main id="main">
@@ -107,6 +251,12 @@
                     }
                 });
             }
+
+            // Menu toggle for mobile
+            document.querySelector('.menu-toggle').addEventListener('click', function() {
+                this.classList.toggle('active');
+                document.querySelector('.sidebar').classList.toggle('active');
+            });
         });
     </script>
 
