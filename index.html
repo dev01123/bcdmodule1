@@ -5,8 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barrage & Canal Design Module</title>
     
-    <!-- Link to external CSS (use the complete Windows path for local testing) -->
+    <!-- Link to external CSS (use the root path) -->
     <link rel="stylesheet" href="/assets/final_styles.css">
+
+    <style>
+        .dropdown-container {
+            display: none;
+            padding-left: 15px;
+        }
+
+        .dropdown-btn.active + .dropdown-container {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
@@ -23,11 +34,11 @@
                 <li>
                     <a href="#" class="dropdown-btn">Barrage Design</a>
                     <ul class="dropdown-container">
-                        <li><a href="#">Barrage Information</a></li>
-                        <li><a href="#">Discharge Computation</a></li>
-                        <li><a href="#">Afflux Computation</a></li>
-                        <li><a href="#">Stilling Basin</a></li>
-                        <li><a href="#">Cut Off</a></li>
+                        <li><a href="#" onclick="loadBarrageDesign()">Barrage Information</a></li>
+                        <li><a href="#" onclick="loadDischargingCapacity()">Discharge Computation</a></li>
+                        <li><a href="#" onclick="loadBarrageDesign()">Afflux Computation</a></li>
+                        <li><a href="#" onclick="loadStillingBasin()">Stilling Basin</a></li>
+                        <li><a href="#" onclick="loadCutoffScour()">Cut Off</a></li>
                         <li><a href="#">Stability Analysis</a></li>
                         <li><a href="#">Structural Design</a></li>
                     </ul>
@@ -41,12 +52,6 @@
                         <li><a href="#">Syphon Aqueduct Design</a></li>
                         <li><a href="#">Syphon Design</a></li>
                         <li><a href="#">Superpassage Design</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#" class="dropdown-btn">Planning Tools</a>
-                    <ul class="dropdown-container">
-                        <li><a href="#">Historical Imagery</a></li>
                     </ul>
                 </li>
                 <li><a href="#">Resources</a></li>
@@ -69,10 +74,12 @@
             <button class="menu-toggle">&#9776;</button>
         </header>
 
-        <!-- Content will be dynamically loaded by JS -->
+        <main id="main">
+            <!-- Content will be dynamically loaded by JS -->
+        </main>
     </div>
 
-    <!-- Scripts (use the complete Windows path for local testing) -->
+    <!-- Scripts (use the root path) -->
     <script src="/js/main_icon.js"></script>
     <script src="/js/contact-us.js"></script>
     <script src="/js/dashboard.js"></script>
@@ -84,7 +91,24 @@
     <script src="/js/BarrageDesign/cutoff_scour.js"></script>
     <script src="/js/disclaimer.js"></script>
     <script src="/js/CanalDesign/section_calculator.js"></script>
-    <script src="/js/historical_imagery.js"></script>
+
+    <script>
+        // Dropdown functionality
+        document.addEventListener("DOMContentLoaded", function() {
+            var dropdowns = document.getElementsByClassName("dropdown-btn");
+            for (var i = 0; i < dropdowns.length; i++) {
+                dropdowns[i].addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    var dropdownContent = this.nextElementSibling;
+                    if (dropdownContent.style.display === "block") {
+                        dropdownContent.style.display = "none";
+                    } else {
+                        dropdownContent.style.display = "block";
+                    }
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
