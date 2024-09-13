@@ -1,0 +1,181 @@
+/* Bootstrap Variables and Core Styles */
+:root {
+    --bs-blue: #0d6efd;
+    --bs-indigo: #6610f2;
+    --bs-purple: #6f42c1;
+    --bs-pink: #d63384;
+    --bs-red: #dc3545;
+    --bs-orange: #fd7e14;
+    --bs-yellow: #ffc107;
+    --bs-green: #198754;
+    --bs-teal: #20c997;
+    --bs-cyan: #0dcaf0;
+    --bs-black: #000;
+    --bs-white: #fff;
+    --bs-gray: #6c757d;
+    --bs-gray-dark: #343a40;
+    --bs-gray-100: #f8f9fa;
+    --bs-gray-200: #e9ecef;
+    --bs-gray-300: #dee2e6;
+    --bs-gray-400: #ced4da;
+    --bs-gray-500: #adb5bd;
+    --bs-gray-600: #6c757d;
+    --bs-gray-700: #495057;
+    --bs-gray-800: #343a40;
+    --bs-gray-900: #212529;
+    --bs-primary: #0d6efd;
+    --bs-secondary: #6c757d;
+    --bs-success: #198754;
+    --bs-info: #0dcaf0;
+    --bs-warning: #ffc107;
+    --bs-danger: #dc3545;
+    --bs-light: #f8f9fa;
+    --bs-dark: #212529;
+  }
+  
+  body {
+    margin: 0;
+    font-family: var(--bs-body-font-family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+  }
+  
+  /* Sidebar Styling */
+  .sidebar {
+    width: 250px;
+    background: linear-gradient(180deg, #005f73, #0a9396);
+    position: fixed;
+    height: 100%;
+    padding: 20px;
+    color: white;
+  }
+  
+  .sidebar .logo img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .sidebar h2 {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  
+  .sidebar p {
+    text-align: center;
+    font-size: 14px;
+    color: #ccd5ae;
+  }
+  
+  .sidebar nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sidebar nav ul li {
+    margin-bottom: 10px;
+  }
+  
+  .sidebar nav ul li a {
+    text-decoration: none;
+    color: white;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .sidebar nav ul li a:hover {
+    background-color: #94d2bd;
+  }
+  
+  /* Dropdown Styling */
+  .dropdown-container {
+    display: none;
+    padding-left: 15px;
+  }
+  
+  .dropdown-btn.active + .dropdown-container {
+    display: block;
+    transition: all 0.3s ease;
+  }
+  
+  .dropdown-btn::after {
+    content: '\25BC';
+    float: right;
+    margin-left: 10px;
+    transition: transform 0.3s;
+  }
+  
+  .dropdown-btn.active::after {
+    transform: rotate(-180deg);
+  }
+  
+  /* Main Content Styling */
+  .main-content {
+    margin-left: 250px;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+  }
+  
+  .main-content header {
+    background-color: #023e8a;
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  /* Responsive Design */
+  .menu-toggle {
+    font-size: 24px;
+    cursor: pointer;
+    display: none;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .sidebar {
+      width: 200px;
+    }
+  
+    .main-content {
+      margin-left: 200px;
+    }
+  
+    .menu-toggle {
+      display: block;
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      color: white;
+    }
+  }
+  
+  @media screen and (max-width: 576px) {
+    .sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+    }
+  
+    .main-content {
+      margin-left: 0;
+    }
+  
+    .menu-toggle.active + .sidebar {
+      display: block;
+      position: absolute;
+      z-index: 1;
+    }
+  }
+  
+  main {
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
