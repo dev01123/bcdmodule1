@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "axiomatic-set-434506-m7",
+  "private_key_id": "cd0d5c4c2ada67f390bd78d5d7e9379d6bbd3071",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCyrv2ahzHuXRFC\nUq2lSov93WD4YRgRX9K2uGeXFPn4zOgaUXV6Cy0KvvvFrLh869OA7WqlnWD1+MIy\nHbqR7wU3f0wIwqibFyYJ+UzdokKIq3XdSLzHO1JT/nDfap4cI7A/F/VueJtzUocg\nnaqSVlDg1tmJvlBG8vrJxusdnJwJVn7jLz+Va57AETtdYOtaywnqgCbUbTY7LFCE\nRG4JwOLJpnqy2Gn8PRUoAQcYyyqMX3rwb6bKVltq5zFSV6U2sZqEQmjAe7ph8Rps\ninz8nXmEZxLkK0LdfBLPuwGPr4550XlWaEVdxoPh+VO1khfxeozfY6y5six8jitR\nCIJiIlEZAgMBAAECggEAPsDfVyyA+DZeT90qmADw3nUnz8OFyOBO6BYmZ3SZ/+uy\n3j9ak0Smin4dfUSWPGU0UDTRfh2iBnDZfvFa61K3EdEWuoLm5SUBmoIgITyRwl75\nU4BusEfgt5gGOyi+I6LTDK2U6DnaWmuTAnztAVzoJba/CrW4itpeAoxmWW19jXdp\ncmVlLBJhTedzDhSFsvxfRFLgmnkhrvcm34qOQcam76nVAZpWUcTkpObfGx58gRCx\nuAcK1bCdQr2vJ/N0ZKQJeauSDEZdkZSX3t7Zzx2B0QqK+Ji9HvgULPe9dQ2oUAfX\nISSF6h2GCdunbtpUetQGiCvlSVWXHNTUDuMh3KMmMwKBgQDZ/W+3OkTjz9tWBt4H\n9TONaQdutGtz67gFMyiFzP0dPnxzZGsa5r1Sd1RnvOrrot/AK7aDfi85zDgyDcmT\nuo/MeK58tTWpY1YLmvV+lp2zM3zgsoy3F5lvdleSZoARJDbV8BhyUfMAJmPF3u+Z\n9u+/PxB56AZPCsh5FDBiqKVqSwKBgQDR1wHSXBRVxsPzyo569mN92t3fi2+hZd+Y\nJgss+dvOD1W7etAZdLR1rMrabivfG7bxnzcidIROAARNTSsGSgEA4jftAJYCwidB\nyakNFJiNsOzo6XcyqFYWaoBR8F17gK376CMRJwbhxkEJblptD0Y+96uiNTaQCHLl\ndx5D0cpTqwKBgH7jaxf4rwj8gOv+a1eufyedL1pdYv7DAwbj1H6t59gR+1cf6Mhr\n72AFXfhUm1o2IJA34bGAzfSSz1Mze1amjfWzeb3VrTrAO+HdfXEGMx2QpuwUgpxA\n/GtJM4hgacOQlOrLKy/AS/aWYhVXw5iXiM6F4w1S5fk0iaUQ/2kuSbspAoGAdNAv\nOG5/93wt61IwXO06V352kxIpM3zlqupKwF/bZ+uLe1GT9QfNydBGILDCBXKFNh6+\n75RTbqR9wJabw+WAh4BnR61S1PhGKE5dqGV1wzLhv4rwCyhAvDvPcU3QjIcG07vX\ngZ3rK9ZUsC5ZcmrVXQo85pCe7jF13J2iIHjyG/8CgYAxYq5WV+rE8UlvLAFm0Ls9\nIzsxGx8xEizAqZRy1mIffDmt2V+E81pNPqAF9o47x0T1LOJaO0LcGS/jGQSaj7VA\n6ES7i0ewUk8hU5aCiZoIVfoROrzUrezFGBsANByMC3CAuBbp+ME7nfDshNc7Xqtb\nGvz3Kijr4I8ne1TzG9+QIQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "varidgupta@axiomatic-set-434506-m7.iam.gserviceaccount.com",
+  "client_id": "109467619391402340915",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/varidgupta%40axiomatic-set-434506-m7.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
