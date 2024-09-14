@@ -223,6 +223,7 @@ function calculateDischarge() {
     let tolerance = 0.01; // Tolerance for stopping the iteration
     let difference = 0;
     let iterationCount = 0;
+    let va=0;
 
     do {
         iterationCount++;
@@ -299,7 +300,7 @@ function calculateDischarge() {
 
         console.log(`Iteration ${iterationCount}: va = ${va.toFixed(4)}, new_va = ${new_va.toFixed(4)}, total discharge = ${totalDischarge.toFixed(2)} m³/s`);
 
-        va = new_va; // Update va for the next iteration
+        va = va+0.01; // Update va for the next iteration
     } while (difference > tolerance); // Continue iterating until the difference is less than the tolerance
 
     console.log(`Final velocity (va) after iteration: ${va.toFixed(4)} m/s`);
