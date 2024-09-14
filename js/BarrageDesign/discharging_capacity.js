@@ -108,6 +108,22 @@ function loadDischargingCapacity() {
                     <!-- Discharge results will be appended here -->
                 </tbody>
             </table>
+
+            <h4 class="section-subtitle">Total Discharge and Final Velocity</h4>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Total Discharge (m³/s)</th>
+                        <th>Final Velocity (va) (m/s)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="totalDischargeResult">0.00</td>
+                        <td id="finalVaResult">0.00</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     `;
 
@@ -223,7 +239,8 @@ function calculateDischarge() {
     let tolerance = 0.01; // Tolerance for stopping the iteration
     let difference = 0;
     let iterationCount = 0;
-    let va=0;
+
+    let finalDischarge = 0; // To hold the final total discharge value
 
     do {
         iterationCount++;
@@ -300,10 +317,16 @@ function calculateDischarge() {
 
         console.log(`Iteration ${iterationCount}: va = ${va.toFixed(4)}, new_va = ${new_va.toFixed(4)}, total discharge = ${totalDischarge.toFixed(2)} m³/s`);
 
-        va = va+0.01; // Update va for the next iteration
+        va = new_va; // Update va for the next iteration
+        finalDischarge = totalDischarge; // Store the final total discharge
+
     } while (difference > tolerance); // Continue iterating until the difference is less than the tolerance
 
     console.log(`Final velocity (va) after iteration: ${va.toFixed(4)} m/s`);
+
+    // Update the total discharge and final va in the results table
+    document.getElementById('totalDischargeResult').textContent = finalDischarge.toFixed(2);
+    document.getElementById('finalVaResult').textContent = va.toFixed(4);
 
     resultsContainer.style.display = 'block'; // Show results
 }
