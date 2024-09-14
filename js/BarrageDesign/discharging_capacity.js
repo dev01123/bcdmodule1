@@ -5,7 +5,7 @@ function loadDischargingCapacity() {
 
     // Create form container
     const form = document.createElement('div');
-    form.classList.add('form-container'); // Assuming this class fits your styling needs
+    form.classList.add('form-container');
 
     // HTML content with CSS classes matching your stylesheet
     form.innerHTML = `
@@ -217,86 +217,92 @@ function calculateDischarge() {
     const totalBayWidth = parseFloat(document.getElementById('barrageBaysTotalWidth').textContent) || 0;
     const totalPierWidth = parseFloat(document.getElementById('piersTotalWidth').textContent) || 0;
 
-    // Iterate through Barrage Bays table rows
-    const baysTableRows = document.getElementById('barrageBaysTable').querySelectorAll('tbody tr');
-    baysTableRows.forEach(row => {
-        const bayType = row.cells[0].querySelector('input').value;
-        const numberOfBays = parseFloat(row.cells[1].querySelector('input').value) || 0;
-        const clearWidth = parseFloat(row.cells[2].querySelector('input').value) || 0;
-        const crestLevel = parseFloat(row.cells[3].querySelector('input').value) || 0;
-        const gateOpening = parseFloat(row.cells[4].querySelector('input').value) || 0;
+    const area = (totalBayWidth + totalPierWidth) * (upstreamLevel - upstreamFloorLevel); // Area for velocity calculation
 
-        // Calculate values needed for different cases
-        const L = numberOfBays * clearWidth;
-        const gateInvertLevel = crestLevel + gateOpening;
-        const H1 = upstreamLevel - crestLevel;
-        const H2 = upstreamLevel - gateInvertLevel; 
+    let va = 0.01; // Initial assumed velocity
+    let tolerance = 0.01; // Tolerance for stopping the iteration
+    let difference = 0;
+    let iterationCount = 0;
 
-        let discharge = 0;
-        let typeOfFlow = '';
+    do {
+        iterationCount++;
+        let totalDischarge = 0; // Initialize total discharge for all bays
 
-        // Determine which case to apply
-        if (upstreamLevel > gateInvertLevel && downstreamLevel<=crestLevel) { // Case 1 example
-            // Case 1: Controlled Free Flow
-            discharge = (2 / 3) * 0.6 * L * Math.sqrt(2 * 9.81) * (Math.pow(H1, 1.5) - Math.pow(H2, 1.5)); // Replace with your specific logic
-            typeOfFlow = 'Controlled Free Flow';
-        } else if (upstreamLevel > gateInvertLevel && downstreamLevel>=gateInvertLevel) { // Case 3
-            // Case 2: Controlled Fully Submerged Flow
-            discharge = 0.6 * L * gateOpening * Math.sqrt(2 * 9.81 * (upstreamLevel - downstreamLevel)); // Replace with your specific logic
-            typeOfFlow = 'Controlled Fully Submerged Flow';
-        } else if (upstreamLevel > gateInvertLevel && downstreamLevel<gateInvertLevel && downstreamLevel>crestLevel) { // Case 2
-            // Case 3: Submerged flow with free and submerged components
-            const Cd_ff = 0.6;
-            const Cd_sf = 0.6;
-            const q1 = (2 / 3) * Cd_ff * L * Math.sqrt(2 * 9.81) * (Math.pow(H1, 1.5) - Math.pow(H2, 1.5));
-            const q2 = Cd_sf * L * (downstreamLevel - crestLevel) * Math.sqrt(2 * 9.81 * (upstreamLevel - downstreamLevel));
-            discharge = q1 + q2;
-            typeOfFlow = 'Controlled Partially Submerged Flow';
-        } else if (upstreamLevel <= gateInvertLevel && downstreamLevel<=crestLevel) { // Case 4: Critical flow calculation by iteration
-            // Case 4: Critical flow calculation by iteration
-            let va = 0.01; // Initial trial velocity
-            let ha = va * va / (2 * 9.81);
-            let Q = 0;
-            let H = H1;
-            const C = (2 / 3) * Math.sqrt(2 * 9.81);
-            const area = (totalBayWidth + totalPierWidth) * (upstreamLevel - upstreamFloorLevel);
+        // Iterate through Barrage Bays table rows to calculate discharge based on current va
+        const baysTableRows = document.getElementById('barrageBaysTable').querySelectorAll('tbody tr');
+        resultsTableBody.innerHTML = ''; // Clear previous results for each iteration
 
-            do {
-                Q = C * L * (Math.pow(H + ha, 1.5) - Math.pow(ha, 1.5));
-                va = Q / area;
-                ha = va * va / (2 * 9.81);
-            } while (Math.abs(va - Q / area) > 0.01); // Repeat until va stabilizes
+        baysTableRows.forEach(row => {
+            const bayType = row.cells[0].querySelector('input').value;
+            const numberOfBays = parseFloat(row.cells[1].querySelector('input').value) || 0;
+            const clearWidth = parseFloat(row.cells[2].querySelector('input').value) || 0;
+            const crestLevel = parseFloat(row.cells[3].querySelector('input').value) || 0;
+            const gateOpening = parseFloat(row.cells[4].querySelector('input').value) || 0;
 
-            discharge = Q;
-            typeOfFlow = 'Uncontrolled Free Flow';
-        } else { 
-            const DR = (downstreamLevel - crestLevel) / H1;
-            const C = -258.27 * Math.pow(DR, 6) + 959.58 * Math.pow(DR, 5) - 1459.3 * Math.pow(DR, 4) + 1158.9 * Math.pow(DR, 3) - 506.24 * Math.pow(DR, 2) + 115.27 * DR - 8.9388;
+            // Calculate values needed for different cases
+            const L = numberOfBays * clearWidth;
+            const gateInvertLevel = crestLevel + gateOpening;
+            const H1 = upstreamLevel - crestLevel;
+            const H2 = upstreamLevel - gateInvertLevel; 
 
-            let va = 0.01; // Initial trial velocity
-            let ha = va * va / (2 * 9.81);
-            let H = H1;
-            let Q = 0;
+            let discharge = 0;
+            let typeOfFlow = '';
 
-            do {
-                Q = C * L * (Math.pow(H + ha, 1.5) - Math.pow(ha, 1.5));
-                va = Q / ((totalBayWidth + totalPierWidth) * (upstreamLevel - upstreamFloorLevel));
-                ha = va * va / (2 * 9.81);
-            } while (Math.abs(va - Q / ((totalBayWidth + totalPierWidth) * (upstreamLevel - upstreamFloorLevel))) > 0.01); // Repeat until va stabilizes
+            // Determine which case to apply based on upstream and downstream levels
+            if (upstreamLevel > gateInvertLevel && downstreamLevel <= crestLevel) { 
+                // Case 1: Controlled Free Flow
+                discharge = (2 / 3) * 0.6 * L * Math.sqrt(2 * 9.81) * (Math.pow(H1, 1.5) - Math.pow(H2, 1.5));
+                typeOfFlow = 'Controlled Free Flow';
+            } else if (upstreamLevel > gateInvertLevel && downstreamLevel >= gateInvertLevel) {
+                // Case 2: Controlled Fully Submerged Flow
+                discharge = 0.6 * L * gateOpening * Math.sqrt(2 * 9.81 * (upstreamLevel - downstreamLevel));
+                typeOfFlow = 'Controlled Fully Submerged Flow';
+            } else if (upstreamLevel > gateInvertLevel && downstreamLevel < gateInvertLevel && downstreamLevel > crestLevel) {
+                // Case 3: Submerged flow with free and submerged components
+                const Cd_ff = 0.6;
+                const Cd_sf = 0.6;
+                const q1 = (2 / 3) * Cd_ff * L * Math.sqrt(2 * 9.81) * (Math.pow(H1, 1.5) - Math.pow(H2, 1.5));
+                const q2 = Cd_sf * L * (downstreamLevel - crestLevel) * Math.sqrt(2 * 9.81 * (upstreamLevel - downstreamLevel));
+                discharge = q1 + q2;
+                typeOfFlow = 'Controlled Partially Submerged Flow';
+            } else if (upstreamLevel <= gateInvertLevel && downstreamLevel <= crestLevel) {
+                // Case 4: Critical flow calculation by iteration (assumed va is used here)
+                let ha = va * va / (2 * 9.81);
+                const C = (2 / 3) * Math.sqrt(2 * 9.81);
+                discharge = C * L * (Math.pow(H1 + ha, 1.5) - Math.pow(ha, 1.5));
+                typeOfFlow = 'Uncontrolled Free Flow';
+            } else {
+                // Uncontrolled Submerged Flow
+                const DR = (downstreamLevel - crestLevel) / H1;
+                const C = -258.27 * Math.pow(DR, 6) + 959.58 * Math.pow(DR, 5) - 1459.3 * Math.pow(DR, 4) + 1158.9 * Math.pow(DR, 3) - 506.24 * Math.pow(DR, 2) + 115.27 * DR - 8.9388;
 
-            discharge = Q;
-            typeOfFlow = 'Uncontrolled Submerged Flow';
-        }
+                let ha = va * va / (2 * 9.81);
+                discharge = C * L * (Math.pow(H1 + ha, 1.5) - Math.pow(ha, 1.5));
+                typeOfFlow = 'Uncontrolled Submerged Flow';
+            }
 
-        // Append result to the table
-        const resultRow = document.createElement('tr');
-        resultRow.innerHTML = `
-            <td>${bayType}</td>
-            <td>${discharge.toFixed(2)}</td>
-            <td>${typeOfFlow}</td>
-        `;
-        resultsTableBody.appendChild(resultRow);
-    });
+            // Append result to the table
+            const resultRow = document.createElement('tr');
+            resultRow.innerHTML = `
+                <td>${bayType}</td>
+                <td>${discharge.toFixed(2)}</td>
+                <td>${typeOfFlow}</td>
+            `;
+            resultsTableBody.appendChild(resultRow);
+
+            totalDischarge += discharge; // Add the discharge for this bay to the total discharge
+        });
+
+        // Recalculate va based on total discharge and area
+        const new_va = totalDischarge / area;
+        difference = Math.abs(new_va - va); // Calculate the difference between the new va and assumed va
+
+        console.log(`Iteration ${iterationCount}: va = ${va.toFixed(4)}, new_va = ${new_va.toFixed(4)}, total discharge = ${totalDischarge.toFixed(2)} m³/s`);
+
+        va = new_va; // Update va for the next iteration
+    } while (difference > tolerance); // Continue iterating until the difference is less than the tolerance
+
+    console.log(`Final velocity (va) after iteration: ${va.toFixed(4)} m/s`);
 
     resultsContainer.style.display = 'block'; // Show results
 }
