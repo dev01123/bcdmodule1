@@ -269,7 +269,7 @@ function calculateDischarge() {
             } else if (upstreamLevel <= gateInvertLevel && downstreamLevel <= crestLevel) {
                 // Case 4: Critical flow calculation by iteration (assumed va is used here)
                 let ha = va * va / (2 * 9.81);
-                const C = (2 / 3) * Math.sqrt(2 * 9.81);
+                const C = (2 / 3) * Math.sqrt(2 * 9.81)*0.6;
                 discharge = C * L * (Math.pow(H1 + ha, 1.5) - Math.pow(ha, 1.5));
                 typeOfFlow = 'Uncontrolled Free Flow';
             } else {
